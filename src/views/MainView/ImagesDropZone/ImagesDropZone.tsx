@@ -36,44 +36,55 @@ const ImagesDropZone: React.FC<IProps> = ({ updateActiveImageIndex, addImageData
 
     const startEditor = (projectType: ProjectType) => {
         if (acceptedFiles.length > 0) {
-
-
-
             for (let x = 0; x < acceptedFiles.length; x++) {
                 EXIF.getData(data[0][x], function () {
                     var a = EXIF.getTag(data[0][x], "GPSLatitude");
                     var b = EXIF.getTag(data[0][x], 'GPSLongitude');
                     var gaoq = EXIF.getTag(data[0][x], "GPSAltitude");
                     var cre = String(EXIF.getTag(data[0][x], "DateTimeOriginal"))
-                    cre = cre.replace(/:/, "-")
-                    cre = cre.replace(/:/, "-")
-                    cre = moment(cre).format('YYYY-MM-DD HH:mm:ss')
-                    var gao = Math.round(gaoq.numerator / gaoq.denominator);
-                    var we = (a[0] + a[1] / 60 + a[2] / 60 / 60).toFixed(7);
-                    var jing = (b[0] + b[1] / 60 + b[2] / 60 / 60).toFixed(7);
-                    console.log(we + "," + jing)
-                    console.log(cre)
-                    $.ajax({
-                        type: "post",
-                        async: false,
-                        url: Settings.AJAX_URL + "/v1/picture/calculate-by-gps?latitude=" + we + "&longitude=" + jing + "&uuid=" + store.getState().labels.imagesData[x].id,
-                        success: function (msg) {
-                            console.log(msg);
-                            // console.log(store.getState().labels.imagesData)
-                            var imgData = store.getState().labels.imagesData[x];
-                            var msgData = msg.data.result[0];
-                            imgData.lineName = msgData.lineName;
-                            imgData.position = msgData.position;
-                            imgData.side = msgData.side;
-                            imgData.towerName = msgData.towerName;
-                            imgData.voltageLevel = msgData.voltageLevel;
-                            imgData.latitude = we;
-                            imgData.longitude = jing;
-                            imgData.height = gao;
-                            imgData.created = cre;
-                        }
-                    })
+                    console.log(gaoq)
+                    if (gaoq === undefined) {
+                        alert("该图片没有GPS数据")
+                        window.location.reload()
+                    } else {
+                        cre = cre.replace(/:/, "-")
+                        cre = cre.replace(/:/, "-")
+                        cre = moment(cre).format('YYYY-MM-DD HH:mm:ss')
+                        var gao = Math.round(gaoq.numerator / gaoq.denominator);
+                        var we = (a[0] + a[1] / 60 + a[2] / 60 / 60).toFixed(7);
+                        var jing = (b[0] + b[1] / 60 + b[2] / 60 / 60).toFixed(7);
+                        console.log(we + "," + jing)
+                        console.log(cre)
+                        $.ajax({
+                            type: "post",
+                            async: false,
+                            url: Settings.AJAX_URL + "/v1/picture/calculate-by-gps?latitude=" + we + "&longitude=" + jing + "&uuid=" + store.getState().labels.imagesData[x].id,
+                            success: function (msg) {
+                                console.log(msg);
+                                // console.log(store.getState().labels.imagesData)
+                                if (msg.data.result === null) {
+                                    alert("没有该条线路数据")
+                                    window.location.reload()
+                                } else {
+                                    var imgData = store.getState().labels.imagesData[x];
+                                    var msgData = msg.data.result[0];
+                                    imgData.lineName = msgData.lineName;
+                                    imgData.position = msgData.position;
+                                    imgData.side = msgData.side;
+                                    imgData.towerName = msgData.towerName;
+                                    imgData.voltageLevel = msgData.voltageLevel;
+                                    imgData.latitude = we;
+                                    imgData.longitude = jing;
+                                    imgData.height = gao;
+                                    imgData.created = cre;
+                                }
+
+                            }
+                        })
+                    }
+
                 })
+
             }
             updateProjectData({
                 ...projectData,

@@ -40,6 +40,7 @@ const TopNavigationBar: React.FC<IProps> = ({ updateActivePopupType, updateProje
         var data = store.getState().labels.imagesData;
         for (let index = 0; index < data.length; index++) {
             var file = data[index].fileData;
+            // console.log(file)
             var form = new FormData();
             var taskId = store.getState().labels.taskId
             var faultsVal = []
@@ -66,6 +67,7 @@ const TopNavigationBar: React.FC<IProps> = ({ updateActivePopupType, updateProje
                 faultsVal.push(a);
 
             }
+            // console.log(faultsVal)
             var faultString = JSON.stringify(faultsVal)
             form.set("file", file);
             form.append("task-id", String(taskId));
@@ -79,15 +81,17 @@ const TopNavigationBar: React.FC<IProps> = ({ updateActivePopupType, updateProje
             form.append("longitude", String(data[index].longitude));
             form.append("picture-created-at", data[index].created);
             form.append("faults", faultString)
-            console.log(faultString)
-            console.log(data[index].labelRects)
-            console.log(form.getAll("picture-created-at"))
+            // console.log(faultString)
+            // console.log(data[index].labelRects)
+            // console.log(form.getAll("picture-created-at"))
             var xhr = new XMLHttpRequest();
-            xhr.open("post", Settings.AJAX_URL +"/v1/picture/upload",true);
+            xhr.open("post", Settings.AJAX_URL + "/v1/picture/upload", true);
             xhr.responseType = "json"
-            xhr.onload = function(msg){
-                console.log(msg)
-            }
+            xhr.onload = function (msg) {
+                console.log(msg.currentTarget)
+                var a = msg.currentTarget;
+                console.log(a)
+            }   
             xhr.upload.onprogress = function (evt) {
                 console.log(evt.total)
             }
@@ -159,7 +163,7 @@ const TopNavigationBar: React.FC<IProps> = ({ updateActivePopupType, updateProje
                             console.log(1)
                             $.ajax({
                                 type: "post",
-                                url: Settings.AJAX_URL + "/v1/task/export-task-detail-list?start-time=2010-01-01&end-time=2020-01-10",
+                                url: Settings.AJAX_URL + "/v1/task/export-task-detail-list?start-time=2010-01-01&end-time=2020-03-31",
                                 success: function (msg) {
                                     //  console.log(msg)
                                     window.open(msg.data)
