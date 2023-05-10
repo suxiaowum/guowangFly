@@ -15,7 +15,7 @@
     "exif-js": "^2.3.0",
     "file-saver": "^2.0.2",
     "jquery": "^3.4.1",
-    "jszip": "^3.2.2",
+    "jszip": "^3.8.0",
     "lodash": "^4.17.15",
     "mobile-detect": "^1.4.3",
     "moment": "^2.24.0",
