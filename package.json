@@ -14,7 +14,7 @@
     "classnames": "^2.2.6",
     "exif-js": "^2.3.0",
     "file-saver": "^2.0.2",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jszip": "^3.2.2",
     "lodash": "^4.17.15",
     "mobile-detect": "^1.4.3",
